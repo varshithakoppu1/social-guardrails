@@ -1,0 +1,69 @@
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #dbdbdb;
+  --border-light: #efefef;
+  --text-primary: #262626;
+  --text-secondary: #8e8e8e;
+  --text-tertiary: #c7c7c7;
+  --accent: #0095f6;
+  --accent-hover: #1877f2;
+  --success: #2e7d32;
+  --success-bg: #e6f4ea;
+  --danger: #ed4956;
+  --danger-bg: #fff0f1;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
