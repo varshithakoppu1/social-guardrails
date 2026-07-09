@@ -51,9 +51,13 @@ export default function Home() {
     setVerdict(null);
 
     try {
+      const appApiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
       const res = await fetch("/api/check-safety", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(appApiKey ? { "x-api-key": appApiKey } : {}),
+        },
         body: JSON.stringify({ caption, imageBase64: imageBase64 ?? undefined }),
       });
 

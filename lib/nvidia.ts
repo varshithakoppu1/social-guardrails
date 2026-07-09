@@ -75,9 +75,9 @@ export async function checkContentSafety(
   const raw: string = data?.choices?.[0]?.message?.content ?? "";
 
   const safe = raw.includes("User Safety: safe");
-  const categoriesMatch = raw.match(/Safety Categories: (.*)/);
-  const categories = categoriesMatch
-    ? categoriesMatch[1]
+  const capturedCategories = raw.match(/Safety Categories: (.*)/)?.[1];
+  const categories = capturedCategories
+    ? capturedCategories
         .split(",")
         .map((c: string) => c.trim())
         .filter(Boolean)
