@@ -1,25 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Gates the entire app behind a single shared password (HTTP Basic Auth).
-// Set SITE_PASSWORD in the environment to enable; leave it unset to keep
-// the app fully public (e.g. for local development).
+// Gates the entire app behind a single shared password, entered on
+// /login (see app/login/page.tsx). Set SITE_PASSWORD in the
+// environment to enable; leave it unset to keep the app fully public
+// (e.g. for local development).
+const PUBLIC_PATHS = ["/login", "/api/login"];
+
 export function middleware(req: NextRequest) {
   const sitePassword = process.env.SITE_PASSWORD;
   if (!sitePassword) return NextResponse.next();
 
-  const auth = req.headers.get("authorization");
-  if (auth) {
-    const [scheme, encoded] = auth.split(" ");
-    if (scheme === "Basic" && encoded) {
-      const [, password] = Buffer.from(encoded, "base64").toString().split(":");
-      if (password === sitePassword) return NextResponse.next();
-    }
+  const { pathname } = req.nextUrl;
+  if (PUBLIC_PATHS.includes(pathname)) return NextResponse.next();
+
+  const cookie = req.cookies.get("site_auth")?.value;
+  if (cookie === sitePassword) return NextResponse.next();
+
+  if (pathname.startsWith("/api")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Guardrails Console"' },
-  });
+  const loginUrl = new URL("/login", req.url);
+  loginUrl.searchParams.set("from", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
